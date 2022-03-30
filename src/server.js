@@ -2,6 +2,7 @@ import express from "express";
 import fs from 'fs';
 import cors from 'cors';
 import morgan from 'morgan';
+import {v4 as uuidv4} from 'uuid';
 
 
 const app = express();
@@ -12,8 +13,16 @@ app.get("/", (req, res) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      const jsonData = JSON.parse(data);
-      res.status(200).json(jsonData);
+      let jsonData = JSON.parse(data);
+
+      const jsonDataWithIds = jsonData.map((mediaObject) => {
+        return {
+          ...mediaObject,
+          id: uuidv4()
+        }
+      });
+
+      res.status(200).json(jsonDataWithIds);
     }
   });
 });
