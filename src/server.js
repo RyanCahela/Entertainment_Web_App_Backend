@@ -1,10 +1,12 @@
 import express from "express";
 import fs from 'fs';
+import cors from 'cors';
+import morgan from 'morgan';
+
 
 const app = express();
-
-app.listen(process.env.PORT || 5000);
-
+app.use(morgan('tiny'));
+app.use(cors({origin: "*"}));
 app.get("/", (req, res) => {
   fs.readFile("./src/data.json", "utf8", (err, data) => {
     if (err) {
@@ -16,6 +18,7 @@ app.get("/", (req, res) => {
   });
 });
 
+app.listen(process.env.PORT || 5000);
 
 /*
 
