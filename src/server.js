@@ -27,6 +27,10 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/api/photo", (req, res) => {
+  
+});
+
 app.listen(process.env.PORT || 5000);
 
 /*
