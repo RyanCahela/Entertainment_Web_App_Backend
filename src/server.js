@@ -1,8 +1,12 @@
 import express from "express";
 import fs from 'fs';
+import path from 'path';
+import { pipeline } from "stream";
 import cors from 'cors';
 import morgan from 'morgan';
 import {v4 as uuidv4} from 'uuid';
+
+const __dirname = path.resolve();
 
 
 const app = express();
@@ -27,8 +31,19 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/api/photo", (req, res) => {
-  
+app.get("/api/assets/thumbnails/:mediaName/:thumbnailType/:filename", (req, res) => {
+  const {mediaName, thumbnailType, filename} = req.params;
+
+  const filePath = `${__dirname}/assets/thumbnails/${mediaName}/${thumbnailType}/${filename}`;
+  res.writeHead(200, {"Content-Type" : "image/jpg"}); 
+
+  pipeline(fs.createReadStream(filePath), res, (err) => {
+    if(err) {
+      console.error(err); 
+      return;
+    }
+    console.log("readStream complete!");
+  })
 });
 
 app.listen(process.env.PORT || 5000);
